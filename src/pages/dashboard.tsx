@@ -166,11 +166,11 @@ export default function Dashboard() {
                   <Title>Netz</Title>
                   <Flex>
                     <Text>
-                      {-Math.round(data?.Body?.Data?.Site?.P_Grid ?? 0)} W
+                      {Math.round(data?.Body?.Data?.Site?.P_Grid ?? 0)} W
                     </Text>
                   </Flex>
                   <DeltaBar
-                    value={Math.round(data?.Body?.Data?.Site?.P_Grid ?? 0) * 2}
+                    value={-Math.round(data?.Body?.Data?.Site?.P_Grid ?? 0) * 2}
                     isIncreasePositive={true}
                     className="mt-3"
                   />
