@@ -116,13 +116,6 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
   }
-
-  res.status(404).json({
-    error: {
-      code: "not_found",
-      message: "The requested endpoint was not found",
-    },
-  });
 };
 
 export default handleWebhook;
