@@ -1,17 +1,31 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model EnergyData {
+    id                      String   @id @default(cuid())
+    batteryMode             String   @default("normal")
+    dt                      Float    @default(99)
+    eDay                    Float    @default(0)
+    eTotal                  Float    @default(0)
+    eYear                   Float    @default(0)
+    batteryCharge           Float    @default(0)
+    batteryStandby          Boolean  @default(false)
+    meterLocation           String   @default("grid")
+    mode                    String   @default("bidirectional")
+    powerAkku               Float    @default(0)
+    powerGrid               Float    @default(0)
+    powerLoad               Float    @default(0)
+    powerPV                 Float    @default(0)
+    relativeAutonomy        Float    @default(0)
+    relativeSelfConsumption Float    @default(0)
+    version                 String   @default("12")
+    date                    DateTime @default(now())
+    timestamp               DateTime @default(now())
 }
