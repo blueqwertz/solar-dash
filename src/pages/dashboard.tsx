@@ -45,6 +45,7 @@ interface Site {
 }
 
 interface Data {
+  // eslint-disable-next-line
   Inverters: { [key: string]: Inverter };
   Site: Site;
   Version: string;
@@ -73,17 +74,21 @@ export default function Dashboard() {
   const [data, setData] = useState<FlowResponse | undefined>(undefined);
 
   useEffect(() => {
-    fetchData();
-    setInterval(fetchData, 5000);
+    void fetchData();
+    setInterval(() => {
+      void fetchData();
+    }, 5000);
   }, []);
 
   const fetchData = async () => {
     try {
+      // eslint-disable-next-line
       const response = await fetch(
         "https://pv.blueqwertz.at/solar_api/v1/GetPowerFlowRealtimeData.fcgi"
       );
 
-      const jsonData = await response.json();
+      // eslint-disable-next-line
+      const jsonData: FlowResponse | undefined = await response.json();
       setData(jsonData);
     } catch (error) {
       console.error("Error fetching data:", error);
