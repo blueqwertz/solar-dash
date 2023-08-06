@@ -163,7 +163,7 @@ export default function Dashboard() {
               </Col>
               <Col numColSpan={1}>
                 <Card>
-                  <Title>Netz</Title>
+                  <Title>Netzbezug</Title>
                   <Flex>
                     <Text>
                       {Math.round(data?.Body?.Data?.Site?.P_Grid ?? 0)} W

@@ -22,13 +22,13 @@ export default function HistoryChart() {
             return {
               Verbrauch: entry.powerLoad,
               Produktion: entry.powerPV,
-              Netz: entry.powerGrid,
+              Netzbezug: entry.powerGrid,
             };
           }) ?? [{}]
         }
         index={"timestamp"}
         colors={["red", "green", "orange"]}
-        categories={["Verbrauch", "Produktion", "Netz"]}
+        categories={["Verbrauch", "Produktion", "Netzbezug"]}
         valueFormatter={dataFormatter}
         showXAxis={false}
       />
