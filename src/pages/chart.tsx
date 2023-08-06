@@ -32,15 +32,17 @@ const chartdata = [
 const dataFormatter = (number: number) =>
   `${Intl.NumberFormat("us").format(number).toString()}%`;
 
-export const HistoryChart = () => (
-  <Card>
-    <LineChart
-      data={chartdata}
-      index="year"
-      categories={["Export Growth Rate", "Import Growth Rate"]}
-      colors={["emerald", "gray"]}
-      valueFormatter={dataFormatter}
-      yAxisWidth={40}
-    />
-  </Card>
-);
+export default function HistoryChart() {
+  return (
+    <Card>
+      <LineChart
+        data={chartdata}
+        index="year"
+        categories={["Export Growth Rate", "Import Growth Rate"]}
+        colors={["emerald", "gray"]}
+        valueFormatter={dataFormatter}
+        yAxisWidth={40}
+      />
+    </Card>
+  );
+}
