@@ -27,7 +27,7 @@ export default function HistoryChart() {
           }) ?? [{}]
         }
         index={"timestamp"}
-        colors={["red", "green", "orange"]}
+        colors={["orange", "green", "red"]}
         categories={["Verbrauch", "Produktion", "Netzbezug"]}
         valueFormatter={dataFormatter}
         showXAxis={false}
