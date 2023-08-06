@@ -88,7 +88,7 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
         mode: data?.Body.Data.Site.Mode ?? "",
         powerAkku: data?.Body.Data.Site.P_Akku ?? 0,
         powerGrid: data?.Body.Data.Site.P_Grid ?? 0,
-        powerLoad: data?.Body.Data.Site.P_Load ?? 0,
+        powerLoad: -data?.Body.Data.Site.P_Load ?? 0,
         powerPV: data?.Body.Data.Site.P_PV ?? 0,
         relativeAutonomy: data?.Body.Data.Site.rel_Autonomy ?? 0,
         relativeSelfConsumption: data?.Body.Data.Site.rel_SelfConsumption ?? 0,

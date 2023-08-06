@@ -1,47 +1,21 @@
-import { Card, Title, LineChart } from "@tremor/react";
+import { Card, Title, LineChart, ValueFormatter } from "@tremor/react";
+import { api } from "~/utils/api";
 
-const chartdata = [
-  {
-    year: 1970,
-    "Export Growth Rate": 2.04,
-    "Import Growth Rate": 1.53,
-  },
-  {
-    year: 1971,
-    "Export Growth Rate": 1.96,
-    "Import Growth Rate": 1.58,
-  },
-  {
-    year: 1972,
-    "Export Growth Rate": 1.96,
-    "Import Growth Rate": 1.61,
-  },
-  {
-    year: 1973,
-    "Export Growth Rate": 1.93,
-    "Import Growth Rate": 1.61,
-  },
-  {
-    year: 1974,
-    "Export Growth Rate": 1.88,
-    "Import Growth Rate": 1.67,
-  },
-  //...
-];
-
-const dataFormatter = (number: number) =>
-  `${Intl.NumberFormat("us").format(number).toString()}%`;
+const dataFormatter: ValueFormatter = () => {
+  return "";
+};
 
 export default function HistoryChart() {
+  const { data } = api.history.completeHistory.useQuery();
+
   return (
     <Card>
       <LineChart
-        data={chartdata}
-        index="year"
-        categories={["Export Growth Rate", "Import Growth Rate"]}
+        data={data!}
+        index={"timestamp"}
         colors={["emerald", "gray"]}
+        categories={["powerLoad", "powerPV"]}
         valueFormatter={dataFormatter}
-        yAxisWidth={40}
       />
     </Card>
   );

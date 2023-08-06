@@ -1,6 +1,4 @@
 import Head from "next/head";
-import Link from "next/link";
-import { api } from "~/utils/api";
 import Dashboard from "./dashboard";
 
 export default function Home() {

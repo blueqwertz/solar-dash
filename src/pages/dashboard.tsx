@@ -199,9 +199,7 @@ export default function Dashboard() {
             </div>
           </TabPanel>
           <TabPanel>
-            <div className="mt-6">
-              <HistoryChart />
-            </div>
+            <div className="mt-6"></div>
           </TabPanel>
         </TabPanels>
       </TabGroup>
