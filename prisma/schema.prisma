@@ -28,3 +28,11 @@ model EnergyData {
     version                 String   @default("12")
     timestamp               DateTime @default(now())
 }
+
+model DailyEnergyData {
+    id        String   @id @default(cuid())
+    eDay      Float    @default(0)
+    eTotal    Float    @default(0)
+    eYear     Float    @default(0)
+    timestamp DateTime @default(now())
+}
