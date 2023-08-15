@@ -93,10 +93,6 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
         relativeAutonomy: data?.Body.Data.Site.rel_Autonomy ?? 0,
         relativeSelfConsumption: data?.Body.Data.Site.rel_SelfConsumption ?? 0,
         version: data?.Body.Data.Version ?? "",
-        date: new Date(
-          data?.Head.Timestamp.slice(0, 10) ??
-            new Date().toDateString().slice(0, 10)
-        ),
         timestamp: new Date(data?.Head.Timestamp ?? new Date().toDateString()),
       },
     });

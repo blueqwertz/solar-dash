@@ -26,6 +26,5 @@ model EnergyData {
     relativeAutonomy        Float    @default(0)
     relativeSelfConsumption Float    @default(0)
     version                 String   @default("12")
-    date                    DateTime @default(now())
     timestamp               DateTime @default(now())
 }

@@ -170,7 +170,7 @@ export default function Dashboard() {
                     </Text>
                   </Flex>
                   <DeltaBar
-                    value={-Math.round(data?.Body?.Data?.Site?.P_Grid ?? 0) * 2}
+                    value={-Math.round(data?.Body?.Data?.Site?.P_Grid ?? 0)}
                     isIncreasePositive={true}
                     className="mt-3"
                   />
