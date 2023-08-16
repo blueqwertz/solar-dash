@@ -36,3 +36,9 @@ model DailyEnergyData {
     eYear     Float    @default(0)
     timestamp DateTime @default(now())
 }
+
+model Forecast {
+    id    String   @id @default(cuid())
+    date  DateTime @unique @default(now())
+    watts Float    @default(0)
+}
