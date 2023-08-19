@@ -2,182 +2,82 @@ import {
   AreaChart,
   Card,
   LineChart,
-  Text,
   Title,
   ValueFormatter,
 } from "@tremor/react";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { api } from "~/utils/api";
+import { Example } from "./test";
 
 const dataFormatter: ValueFormatter = (number: number) => {
   return Math.round(number).toString() + " W";
 };
 
 export default function HistoryChart() {
-  const { data } = api.history.todayHistory.useQuery();
+  const { data: history } = api.history.todayHistory.useQuery();
 
-  const forecast = {
-    result: {
-      watts: {
-        "2023-08-16 05:50:34": 0,
-        "2023-08-16 06:00:00": 178,
-        "2023-08-16 07:00:00": 496,
-        "2023-08-16 08:00:00": 839,
-        "2023-08-16 09:00:00": 1636,
-        "2023-08-16 10:00:00": 2970,
-        "2023-08-16 11:00:00": 3723,
-        "2023-08-16 12:00:00": 3895,
-        "2023-08-16 13:00:00": 3628,
-        "2023-08-16 14:00:00": 2570,
-        "2023-08-16 15:00:00": 1929,
-        "2023-08-16 16:00:00": 1417,
-        "2023-08-16 17:00:00": 1058,
-        "2023-08-16 18:00:00": 394,
-        "2023-08-16 19:00:00": 55,
-        "2023-08-16 20:00:00": 8,
-        "2023-08-16 20:08:00": 0,
-        "2023-08-17 05:51:56": 0,
-        "2023-08-17 06:00:00": 220,
-        "2023-08-17 07:00:00": 750,
-        "2023-08-17 08:00:00": 1627,
-        "2023-08-17 09:00:00": 2508,
-        "2023-08-17 10:00:00": 3243,
-        "2023-08-17 11:00:00": 3757,
-        "2023-08-17 12:00:00": 3888,
-        "2023-08-17 13:00:00": 3776,
-        "2023-08-17 14:00:00": 3588,
-        "2023-08-17 15:00:00": 2954,
-        "2023-08-17 16:00:00": 2133,
-        "2023-08-17 17:00:00": 1230,
-        "2023-08-17 18:00:00": 431,
-        "2023-08-17 19:00:00": 51,
-        "2023-08-17 20:00:00": 8,
-        "2023-08-17 20:06:13": 0,
-      },
-      watt_hours_period: {
-        "2023-08-16 05:50:34": 0,
-        "2023-08-16 06:00:00": 14,
-        "2023-08-16 07:00:00": 337,
-        "2023-08-16 08:00:00": 668,
-        "2023-08-16 09:00:00": 1238,
-        "2023-08-16 10:00:00": 2303,
-        "2023-08-16 11:00:00": 3347,
-        "2023-08-16 12:00:00": 3809,
-        "2023-08-16 13:00:00": 3762,
-        "2023-08-16 14:00:00": 3099,
-        "2023-08-16 15:00:00": 2250,
-        "2023-08-16 16:00:00": 1673,
-        "2023-08-16 17:00:00": 1238,
-        "2023-08-16 18:00:00": 726,
-        "2023-08-16 19:00:00": 225,
-        "2023-08-16 20:00:00": 32,
-        "2023-08-16 20:08:00": 1,
-        "2023-08-17 05:51:56": 0,
-        "2023-08-17 06:00:00": 15,
-        "2023-08-17 07:00:00": 485,
-        "2023-08-17 08:00:00": 1189,
-        "2023-08-17 09:00:00": 2068,
-        "2023-08-17 10:00:00": 2876,
-        "2023-08-17 11:00:00": 3500,
-        "2023-08-17 12:00:00": 3823,
-        "2023-08-17 13:00:00": 3832,
-        "2023-08-17 14:00:00": 3682,
-        "2023-08-17 15:00:00": 3271,
-        "2023-08-17 16:00:00": 2544,
-        "2023-08-17 17:00:00": 1682,
-        "2023-08-17 18:00:00": 831,
-        "2023-08-17 19:00:00": 241,
-        "2023-08-17 20:00:00": 30,
-        "2023-08-17 20:06:13": 0,
-      },
-      watt_hours: {
-        "2023-08-16 05:50:34": 0,
-        "2023-08-16 06:00:00": 14,
-        "2023-08-16 07:00:00": 351,
-        "2023-08-16 08:00:00": 1019,
-        "2023-08-16 09:00:00": 2257,
-        "2023-08-16 10:00:00": 4560,
-        "2023-08-16 11:00:00": 7907,
-        "2023-08-16 12:00:00": 11716,
-        "2023-08-16 13:00:00": 15478,
-        "2023-08-16 14:00:00": 18577,
-        "2023-08-16 15:00:00": 20827,
-        "2023-08-16 16:00:00": 22500,
-        "2023-08-16 17:00:00": 23738,
-        "2023-08-16 18:00:00": 24464,
-        "2023-08-16 19:00:00": 24689,
-        "2023-08-16 20:00:00": 24721,
-        "2023-08-16 20:08:00": 24722,
-        "2023-08-17 05:51:56": 0,
-        "2023-08-17 06:00:00": 15,
-        "2023-08-17 07:00:00": 500,
-        "2023-08-17 08:00:00": 1689,
-        "2023-08-17 09:00:00": 3757,
-        "2023-08-17 10:00:00": 6633,
-        "2023-08-17 11:00:00": 10133,
-        "2023-08-17 12:00:00": 13956,
-        "2023-08-17 13:00:00": 17788,
-        "2023-08-17 14:00:00": 21470,
-        "2023-08-17 15:00:00": 24741,
-        "2023-08-17 16:00:00": 27285,
-        "2023-08-17 17:00:00": 28967,
-        "2023-08-17 18:00:00": 29798,
-        "2023-08-17 19:00:00": 30039,
-        "2023-08-17 20:00:00": 30069,
-        "2023-08-17 20:06:13": 30069,
-      },
-      watt_hours_day: { "2023-08-16": 24722, "2023-08-17": 30069 },
-    },
-    message: {
-      code: 0,
-      type: "success",
-      text: "",
-      pid: "g9sbXR7f",
-      info: {
-        latitude: 48.1181,
-        longitude: 16.266,
-        distance: 0,
-        place:
-          "Landhaus Schindler, Marktplatz 21, 2380 Gemeinde Perchtoldsdorf, Austria",
-        timezone: "Europe/Vienna",
-        time: "2023-08-16T17:42:50+02:00",
-        time_utc: "2023-08-16T15:42:50+00:00",
-      },
-      ratelimit: { period: 3600, limit: 12, remaining: 1 },
-    },
-  };
+  const { data: forecast } = api.forecast.todayForecast.useQuery();
+
+  const entries = [];
+
+  if (!history || !forecast) {
+    return <>Loading...</>;
+  }
+
+  let currentTime = dayjs().startOf("day");
+
+  while (currentTime.isBefore(dayjs().endOf("day"))) {
+    const matchingHistoryEntry = history?.find(
+      (entry) => currentTime.diff(dayjs(entry.timestamp), "minute") < 1
+    );
+    const matchingForecastEntry = forecast?.find(
+      (entry) =>
+        currentTime.diff(dayjs(entry.timestamp), "minute") >= 0 &&
+        currentTime.diff(dayjs(entry.timestamp), "minute") < 1
+    );
+
+    // if (matchingHistoryEntry || matchingForecastEntry) {
+    //   entries.push({
+    //     Verbrauch: matchingHistoryEntry?.powerLoad,
+    //     Produktion: matchingHistoryEntry?.powerPV,
+    //     Netzbezug: matchingHistoryEntry?.powerGrid,
+    //     Batteriebezug: matchingHistoryEntry?.powerAkku,
+    //     Vorhersage: matchingForecastEntry?.watts,
+    //     timestamp: currentTime.format("HH:mm"),
+    //   });
+    // }
+
+    if (matchingHistoryEntry) {
+      entries.push({
+        Verbrauch: matchingHistoryEntry.powerLoad,
+        Produktion: matchingHistoryEntry.powerPV,
+        Netzbezug: matchingHistoryEntry.powerGrid,
+        Batteriebezug: matchingHistoryEntry.powerAkku,
+
+        timestamp: currentTime.format("HH:mm"),
+      });
+    } else if (matchingForecastEntry) {
+      entries.push({
+        Vorhersage: matchingForecastEntry.watts,
+        timestamp: currentTime.format("HH:mm"),
+      });
+    } else {
+      entries.push({
+        timestamp: currentTime.format("HH:mm"),
+      });
+    }
+
+    currentTime = currentTime.add(5, "minute");
+  }
 
   return (
     <Card>
-      <Title>Tageshistorie</Title>
+      <Title>Tagesverlauf</Title>
       <LineChart
+        connectNulls={true}
         className="mt-6"
-        data={[
-          ...(data?.map((entry) => {
-            return {
-              Verbrauch: entry.powerLoad,
-              Produktion: entry.powerPV,
-              Netzbezug: entry.powerGrid,
-              Datum: dayjs(entry.timestamp).format("HH:mm"),
-              Batterie: entry.batteryCharge,
-              Batteriebezug: entry.powerAkku,
-            };
-          }) ?? [{}]),
-          ...Object.entries(forecast.result.watts)
-            .filter(([timestamp]) => {
-              return (
-                new Date(timestamp) > new Date() &&
-                new Date(timestamp).getDate() === new Date().getDate()
-              );
-            })
-            .map(([timestamp, watts]) => {
-              return {
-                Datum: dayjs(timestamp).format("HH:mm"),
-                Vorhersage: watts,
-              };
-            }),
-        ]}
-        index={"Datum"}
+        data={[...entries]}
+        index={"timestamp"}
         colors={["orange", "green", "red", "sky", "neutral"]}
         categories={[
           "Verbrauch",
@@ -193,6 +93,7 @@ export default function HistoryChart() {
         // showGridLines={false}
         showAnimation={false}
       />
+      {/* <Example /> */}
     </Card>
   );
 }

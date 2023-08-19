@@ -27,6 +27,9 @@ model EnergyData {
     relativeSelfConsumption Float    @default(0)
     version                 String   @default("12")
     timestamp               DateTime @default(now())
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
 }
 
 model DailyEnergyData {
@@ -35,10 +38,16 @@ model DailyEnergyData {
     eTotal    Float    @default(0)
     eYear     Float    @default(0)
     timestamp DateTime @default(now())
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Forecast {
-    id    String   @id @default(cuid())
-    date  DateTime @unique @default(now())
-    watts Float    @default(0)
+    id        String   @id @default(cuid())
+    timestamp DateTime @unique @default(now())
+    watts     Float    @default(0)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
 }

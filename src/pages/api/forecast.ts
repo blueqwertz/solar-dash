@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "~/server/db";
 
@@ -48,19 +49,33 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     // eslint-disable-next-line
     const response = await fetch(
-      "https://api.forecast.solar/estimate/48.118080/16.266020/30/10/5.4.json"
+      "https://api.forecast.solar/estimate/48.114109/16.265310/35/-10/5.4.json"
     );
     // eslint-disable-next-line
     const data: ForecastResponse = await response.json();
 
-    Object.entries(data.result.watts).map(async ([timestamp, watts]) => {
-      await prisma.forecast.create({
-        data: {
-          date: timestamp,
-          watts: watts,
-        },
-      });
-    });
+    console.log(data);
+
+    const prismaAnswer = await prisma.$transaction(
+      Object.entries(data.result.watts)
+        .filter(
+          ([timestamp]) => !dayjs(timestamp).isBefore(dayjs().endOf("day"))
+        )
+        .map(([timestamp, watts]) => {
+          return prisma.forecast.upsert({
+            where: {
+              timestamp: new Date(timestamp),
+            },
+            update: {
+              watts,
+            },
+            create: {
+              timestamp: new Date(timestamp),
+              watts,
+            },
+          });
+        })
+    );
 
     res.status(200).json({
       error: {
@@ -73,6 +88,7 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
       error: {
         code: "error",
         message: "Error fetching data",
+        errorMessage: error,
       },
     });
   }

@@ -1,5 +1,6 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { historyRouter } from "./routers/history";
+import { forecastRouter } from "./routers/forecast";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { historyRouter } from "./routers/history";
  */
 export const appRouter = createTRPCRouter({
   history: historyRouter,
+  forecast: forecastRouter,
 });
 
 // export type definition of API
