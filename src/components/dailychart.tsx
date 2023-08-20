@@ -36,33 +36,32 @@ export default function HistoryChart() {
         currentTime.diff(dayjs(entry.timestamp), "minute") < 1
     );
 
-    if (matchingHistoryEntry || matchingForecastEntry) {
-      entries.push({
-        Verbrauch: matchingHistoryEntry?.powerLoad,
-        Produktion: matchingHistoryEntry?.powerPV,
-        Netzbezug: matchingHistoryEntry?.powerGrid,
-        Batteriebezug: matchingHistoryEntry?.powerAkku,
-        Vorhersage: matchingForecastEntry?.watts,
-        timestamp: currentTime.format("HH:mm"),
-      });
-    }
-
-    // if (matchingHistoryEntry) {
+    // if (matchingHistoryEntry || matchingForecastEntry) {
     //   entries.push({
-    //     Verbrauch: matchingHistoryEntry.powerLoad,
-    //     Produktion: matchingHistoryEntry.powerPV,
-    //     Netzbezug: matchingHistoryEntry.powerGrid,
-    //     Batteriebezug: matchingHistoryEntry.powerAkku,
-
-    //     timestamp: currentTime.format("HH:mm"),
-    //   });
-    // } else if (matchingForecastEntry) {
-    //   entries.push({
-    //     Vorhersage: matchingForecastEntry.watts,
+    //     Verbrauch: matchingHistoryEntry?.powerLoad,
+    //     Produktion: matchingHistoryEntry?.powerPV,
+    //     Netzbezug: matchingHistoryEntry?.powerGrid,
+    //     Batteriebezug: matchingHistoryEntry?.powerAkku,
+    //     Vorhersage: matchingForecastEntry?.watts,
     //     timestamp: currentTime.format("HH:mm"),
     //   });
     // }
-    else {
+
+    if (matchingHistoryEntry) {
+      entries.push({
+        Verbrauch: matchingHistoryEntry.powerLoad,
+        Produktion: matchingHistoryEntry.powerPV,
+        Netzbezug: matchingHistoryEntry.powerGrid,
+        Batteriebezug: matchingHistoryEntry.powerAkku,
+
+        timestamp: currentTime.format("HH:mm"),
+      });
+    } else if (matchingForecastEntry) {
+      entries.push({
+        Vorhersage: matchingForecastEntry.watts,
+        timestamp: currentTime.format("HH:mm"),
+      });
+    } else {
       entries.push({
         timestamp: currentTime.format("HH:mm"),
       });
@@ -76,7 +75,7 @@ export default function HistoryChart() {
       <Title>Tagesverlauf</Title>
       <LineChart
         connectNulls={true}
-        className="mt-6"
+        className="-mt-7"
         data={[...entries]}
         index={"timestamp"}
         colors={["orange", "green", "red", "sky", "neutral"]}
@@ -89,7 +88,7 @@ export default function HistoryChart() {
         ]}
         curveType="natural"
         valueFormatter={dataFormatter}
-        showLegend={false}
+        showLegend={true}
         showYAxis={false}
         showXAxis={false}
         // showGridLines={false}
