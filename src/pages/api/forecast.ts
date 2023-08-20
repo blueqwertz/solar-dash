@@ -8,33 +8,16 @@ export const config = {
   },
 };
 
+type ForecastEntry = {
+  pv_estimate: number;
+  pv_estimate10: number;
+  pv_estimate90: number;
+  period_end: string;
+  period: string;
+};
+
 type ForecastResponse = {
-  result: {
-    watts: Record<string, number>;
-    watt_hours_period: Record<string, number>;
-    watt_hours: Record<string, number>;
-    watt_hours_day: Record<string, number>;
-  };
-  message: {
-    code: number;
-    type: string;
-    text: string;
-    pid: string;
-    info: {
-      latitude: number;
-      longitude: number;
-      distance: number;
-      place: string;
-      timezone: string;
-      time: string;
-      time_utc: string;
-    };
-    ratelimit: {
-      period: number;
-      limit: number;
-      remaining: number;
-    };
-  };
+  forecasts: ForecastEntry[];
 };
 
 const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -50,7 +33,7 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     // eslint-disable-next-line
     const response = await fetch(
-      "https://api.forecast.solar/estimate/48.114109/16.265310/35/-10/5.4.json"
+      "https://api.solcast.com.au/rooftop_sites/09d0-9ee0-85b6-5f9d/forecasts?format=json"
     );
     // eslint-disable-next-line
     const data: ForecastResponse = await response.json();
@@ -61,14 +44,18 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
       where: {
         timestamp: {
           gte: dayjs().startOf("day").toDate(),
-          lte: dayjs().add(1, "day").endOf("day").toDate(),
+          lte: dayjs().add(2, "day").endOf("day").toDate(),
         },
       },
     });
 
     const createAnswer = await prisma.forecast.createMany({
-      data: Object.entries(data.result.watts).map(([timestamp, watts]) => {
-        return { timestamp: new Date(timestamp), watts };
+      data: data.forecasts.map((entry) => {
+        entry.pv_estimate = entry.pv_estimate * 1000;
+        return {
+          timestamp: new Date(entry.period_end),
+          watts: entry.pv_estimate,
+        };
       }),
     });
 
@@ -78,7 +65,6 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
         message: "Forecast updated",
         removeAnswer,
         createAnswer,
-        limit: data.message.ratelimit.remaining,
       },
     });
     responseSet = true;
