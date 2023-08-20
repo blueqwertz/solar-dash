@@ -72,6 +72,16 @@ export function Example() {
             bottom: 5,
           }}
         >
+          <defs>
+            <linearGradient id="colorUsage" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#dc2626" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#dc2626" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+            </linearGradient>
+          </defs>
           {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <CartesianGrid
             strokeDasharray="3 3"
@@ -79,21 +89,23 @@ export function Example() {
           />
           <YAxis yAxisId={"watt"} hide={true} />
           <YAxis yAxisId={"percent"} hide={true} />
-          <Tooltip isAnimationActive={false} />
-          <Line
+          {/* <Tooltip isAnimationActive={false} /> */}
+          <Area
             type="monotone"
             dataKey="powerPV"
             name="Produktion"
             color="#82ca9d"
+            fill="url(#colorPv)"
             dot={false}
             strokeWidth={2}
             yAxisId={"watt"}
             stroke="#22c55e"
           />
-          <Line
+          <Area
             type="monotone"
             dataKey="powerGrid"
             stroke="#ef4444"
+            fill="url(#colorUsage)"
             dot={false}
             yAxisId={"watt"}
             strokeWidth={2}

@@ -36,32 +36,33 @@ export default function HistoryChart() {
         currentTime.diff(dayjs(entry.timestamp), "minute") < 1
     );
 
-    // if (matchingHistoryEntry || matchingForecastEntry) {
+    if (matchingHistoryEntry || matchingForecastEntry) {
+      entries.push({
+        Verbrauch: matchingHistoryEntry?.powerLoad,
+        Produktion: matchingHistoryEntry?.powerPV,
+        Netzbezug: matchingHistoryEntry?.powerGrid,
+        Batteriebezug: matchingHistoryEntry?.powerAkku,
+        Vorhersage: matchingForecastEntry?.watts,
+        timestamp: currentTime.format("HH:mm"),
+      });
+    }
+
+    // if (matchingHistoryEntry) {
     //   entries.push({
-    //     Verbrauch: matchingHistoryEntry?.powerLoad,
-    //     Produktion: matchingHistoryEntry?.powerPV,
-    //     Netzbezug: matchingHistoryEntry?.powerGrid,
-    //     Batteriebezug: matchingHistoryEntry?.powerAkku,
-    //     Vorhersage: matchingForecastEntry?.watts,
+    //     Verbrauch: matchingHistoryEntry.powerLoad,
+    //     Produktion: matchingHistoryEntry.powerPV,
+    //     Netzbezug: matchingHistoryEntry.powerGrid,
+    //     Batteriebezug: matchingHistoryEntry.powerAkku,
+
+    //     timestamp: currentTime.format("HH:mm"),
+    //   });
+    // } else if (matchingForecastEntry) {
+    //   entries.push({
+    //     Vorhersage: matchingForecastEntry.watts,
     //     timestamp: currentTime.format("HH:mm"),
     //   });
     // }
-
-    if (matchingHistoryEntry) {
-      entries.push({
-        Verbrauch: matchingHistoryEntry.powerLoad,
-        Produktion: matchingHistoryEntry.powerPV,
-        Netzbezug: matchingHistoryEntry.powerGrid,
-        Batteriebezug: matchingHistoryEntry.powerAkku,
-
-        timestamp: currentTime.format("HH:mm"),
-      });
-    } else if (matchingForecastEntry) {
-      entries.push({
-        Vorhersage: matchingForecastEntry.watts,
-        timestamp: currentTime.format("HH:mm"),
-      });
-    } else {
+    else {
       entries.push({
         timestamp: currentTime.format("HH:mm"),
       });
@@ -86,6 +87,7 @@ export default function HistoryChart() {
           "Batteriebezug",
           "Vorhersage",
         ]}
+        curveType="natural"
         valueFormatter={dataFormatter}
         showLegend={false}
         showYAxis={false}
@@ -93,7 +95,6 @@ export default function HistoryChart() {
         // showGridLines={false}
         showAnimation={false}
       />
-      {/* <Example /> */}
     </Card>
   );
 }

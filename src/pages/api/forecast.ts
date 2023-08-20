@@ -38,13 +38,14 @@ type ForecastResponse = {
 };
 
 const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
-  setTimeout(
-    () =>
-      res.status(500).json({
-        message: "Timeout reached!",
-      }),
-    5000
-  );
+  let responseSet = false;
+
+  setTimeout(() => {
+    if (responseSet) return;
+    res.status(500).json({
+      message: "Timeout reached!",
+    });
+  }, 5000);
 
   try {
     // eslint-disable-next-line
@@ -56,33 +57,31 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
     console.log(data);
 
-    const prismaAnswer = await prisma.$transaction(
-      Object.entries(data.result.watts)
-        .filter(
-          ([timestamp]) => !dayjs(timestamp).isBefore(dayjs().endOf("day"))
-        )
-        .map(([timestamp, watts]) => {
-          return prisma.forecast.upsert({
-            where: {
-              timestamp: new Date(timestamp),
-            },
-            update: {
-              watts,
-            },
-            create: {
-              timestamp: new Date(timestamp),
-              watts,
-            },
-          });
-        })
-    );
+    const removeAnswer = await prisma.forecast.deleteMany({
+      where: {
+        timestamp: {
+          gte: dayjs().startOf("day").toDate(),
+          lte: dayjs().add(1, "day").endOf("day").toDate(),
+        },
+      },
+    });
+
+    const createAnswer = await prisma.forecast.createMany({
+      data: Object.entries(data.result.watts).map(([timestamp, watts]) => {
+        return { timestamp: new Date(timestamp), watts };
+      }),
+    });
 
     res.status(200).json({
       error: {
         code: "success",
         message: "Forecast updated",
+        removeAnswer,
+        createAnswer,
+        limit: data.message.ratelimit.remaining,
       },
     });
+    responseSet = true;
   } catch (error) {
     res.status(404).json({
       error: {
@@ -91,6 +90,7 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
         errorMessage: error,
       },
     });
+    responseSet = true;
   }
 };
 

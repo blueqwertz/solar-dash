@@ -17,7 +17,7 @@ import {
 } from "@tremor/react";
 
 import { useEffect, useState } from "react";
-import HistoryChart from "./chart";
+import HistoryChart from "./dailychart";
 
 interface Inverter {
   Battery_Mode: string;
