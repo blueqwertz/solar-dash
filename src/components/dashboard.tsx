@@ -17,7 +17,8 @@ import {
 } from "@tremor/react";
 
 import { useEffect, useState } from "react";
-import HistoryChart from "./dailychart";
+import HistoryChart from "./charts/daily-chart";
+import ForecastChart from "./charts/forecast-tomorrow";
 
 interface Inverter {
   Battery_Mode: string;
@@ -199,7 +200,11 @@ export default function Dashboard() {
             </div>
           </TabPanel>
           <TabPanel>
-            <div className="mt-6"></div>
+            <Grid numItems={1} className="mt-6 gap-6">
+              <Col>
+                <ForecastChart />
+              </Col>
+            </Grid>
           </TabPanel>
         </TabPanels>
       </TabGroup>

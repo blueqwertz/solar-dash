@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 
 export const config = {
@@ -21,10 +22,10 @@ type ForecastResponse = {
 };
 
 const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
-  let responseSet = false;
+  let responseSent = false;
 
   setTimeout(() => {
-    if (responseSet) return;
+    if (responseSent) return;
     res.status(500).json({
       message: "Timeout reached!",
     });
@@ -33,17 +34,27 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     // eslint-disable-next-line
     const response = await fetch(
-      "https://api.solcast.com.au/rooftop_sites/09d0-9ee0-85b6-5f9d/forecasts?format=json"
+      `https://api.solcast.com.au/rooftop_sites/09d0-9ee0-85b6-5f9d/forecasts?format=json&api_key=${env.SOLCAST_API_KEY}`,
+      { method: "GET", redirect: "follow" }
     );
+    console.log(response.status, response.statusText, response.body);
     // eslint-disable-next-line
     const data: ForecastResponse = await response.json();
 
-    console.log(data);
+    if (!data) {
+      res.status(505).json({
+        error: {
+          code: "error",
+          message: "Error fetching data",
+        },
+      });
+      responseSent = true;
+    }
 
     const removeAnswer = await prisma.forecast.deleteMany({
       where: {
         timestamp: {
-          gte: dayjs().startOf("day").toDate(),
+          gte: dayjs(data?.forecasts?.[0]?.period_end).toDate(),
           lte: dayjs().add(2, "day").endOf("day").toDate(),
         },
       },
@@ -67,16 +78,16 @@ const handleWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
         createAnswer,
       },
     });
-    responseSet = true;
+    responseSent = true;
   } catch (error) {
-    res.status(404).json({
+    res.status(505).json({
       error: {
         code: "error",
         message: "Error fetching data",
         errorMessage: error,
       },
     });
-    responseSet = true;
+    responseSent = true;
   }
 };
 
