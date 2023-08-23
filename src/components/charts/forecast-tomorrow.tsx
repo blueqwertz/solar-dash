@@ -25,7 +25,6 @@ export default function ForecastChart() {
       <Title>Vorhersage</Title>
       <LineChart
         connectNulls={true}
-        className="-mt-7"
         data={
           data.map((entry) => {
             return {
@@ -39,7 +38,7 @@ export default function ForecastChart() {
         categories={["Vorhersage"]}
         curveType="natural"
         valueFormatter={dataFormatter}
-        showLegend={true}
+        showLegend={false}
         showYAxis={false}
         showXAxis={true}
         // showGridLines={false}

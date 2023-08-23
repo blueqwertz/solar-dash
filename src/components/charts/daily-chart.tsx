@@ -75,7 +75,6 @@ export default function HistoryChart() {
       <Title>Tagesverlauf</Title>
       <LineChart
         connectNulls={true}
-        className="-mt-7"
         data={[...entries]}
         index={"timestamp"}
         colors={["orange", "green", "red", "sky", "neutral"]}
@@ -88,7 +87,7 @@ export default function HistoryChart() {
         ]}
         curveType="natural"
         valueFormatter={dataFormatter}
-        showLegend={true}
+        showLegend={false}
         showYAxis={false}
         showXAxis={false}
         // showGridLines={false}
