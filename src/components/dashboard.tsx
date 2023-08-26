@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import HistoryChart from "./charts/daily-chart";
 import ForecastChart from "./charts/forecast-tomorrow";
+import BatteryLastDay from "./charts/battery-last-day";
 
 interface Inverter {
   Battery_Mode: string;
@@ -203,6 +204,9 @@ export default function Dashboard() {
             <Grid numItems={1} className="mt-6 gap-6">
               <Col>
                 <ForecastChart />
+              </Col>
+              <Col>
+                <BatteryLastDay />
               </Col>
             </Grid>
           </TabPanel>

@@ -1,31 +1,73 @@
-import { Card, Title } from "@tremor/react";
 import dayjs from "dayjs";
-import { Loader } from "lucide";
-import React, { PureComponent } from "react";
 import {
-  LineChart,
   Line,
   ComposedChart,
-  XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
-  Area,
   ResponsiveContainer,
 } from "recharts";
 import { api } from "~/utils/api";
+import type { TooltipProps } from "recharts";
+import {
+  ValueType,
+  NameType,
+} from "recharts/types/component/DefaultTooltipContent";
 
-export function Example() {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: TooltipProps<ValueType, NameType>) => {
+  if (!payload || !payload[0]) {
+    return null;
+  }
+
+  if (active) {
+    return (
+      <div className="h-full rounded-lg border bg-white text-sm">
+        <p className="border-b px-4 py-2 font-medium">
+          {payload[0].payload.timestamp}
+        </p>
+        <div className="px-4 py-2">
+          {payload?.map((entry) => {
+            return (
+              <div className="flex w-48 items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-3 w-3 items-center justify-center rounded-full shadow">
+                    <div
+                      className="h-2 w-2 rounded-full"
+                      style={{ backgroundColor: entry.color }}
+                    ></div>
+                  </div>
+                  <p className="text-slate-600">{entry.name}</p>
+                </div>
+                <p className="label">
+                  {typeof entry.value == "number"
+                    ? Math.round(entry.value)
+                    : entry.value}{" "}
+                  W
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+};
+
+export function CustomChart() {
   const { data: history } = api.history.todayHistory.useQuery();
-
   const { data: forecast } = api.forecast.todayForecast.useQuery();
-
-  const entries = [];
 
   if (!history || !forecast) {
     return <>Loading...</>;
   }
+
+  const entries = [];
 
   let currentTime = dayjs().startOf("day");
 
@@ -59,7 +101,7 @@ export function Example() {
   }
 
   return (
-    <div className="h-[320px]">
+    <div className="mt-6 h-[320px]">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart
           width={500}
@@ -67,45 +109,33 @@ export function Example() {
           data={entries}
           margin={{
             top: 5,
-            right: 20,
-            left: 20,
+            right: 5,
+            left: 5,
             bottom: 5,
           }}
         >
-          <defs>
-            <linearGradient id="colorUsage" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#dc2626" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#dc2626" stopOpacity={0} />
-            </linearGradient>
-            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <CartesianGrid
             strokeDasharray="3 3"
             verticalCoordinatesGenerator={(props) => []}
           />
           <YAxis yAxisId={"watt"} hide={true} />
           <YAxis yAxisId={"percent"} hide={true} />
-          {/* <Tooltip isAnimationActive={false} /> */}
-          <Area
+          <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
+          <Line
             type="monotone"
             dataKey="powerPV"
             name="Produktion"
             color="#82ca9d"
-            fill="url(#colorPv)"
             dot={false}
             strokeWidth={2}
             yAxisId={"watt"}
             stroke="#22c55e"
           />
-          <Area
+          <Line
             type="monotone"
             dataKey="powerGrid"
+            name="Netzbezug"
             stroke="#ef4444"
-            fill="url(#colorUsage)"
             dot={false}
             yAxisId={"watt"}
             strokeWidth={2}
@@ -122,7 +152,7 @@ export function Example() {
           <Line
             type="monotone"
             dataKey="powerLoad"
-            stroke="#f59e0b"
+            stroke="#f97316"
             dot={false}
             yAxisId={"watt"}
             strokeWidth={2}
@@ -131,7 +161,7 @@ export function Example() {
           <Line
             type="monotone"
             dataKey="watts"
-            stroke="#22c55e"
+            stroke="#a3a3a3"
             dot={false}
             yAxisId={"watt"}
             strokeWidth={2}

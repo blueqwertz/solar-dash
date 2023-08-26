@@ -1,20 +1,13 @@
-import {
-  AreaChart,
-  Card,
-  LineChart,
-  Title,
-  ValueFormatter,
-} from "@tremor/react";
-import dayjs, { Dayjs } from "dayjs";
+import { Card, LineChart, Title, ValueFormatter } from "@tremor/react";
+import dayjs from "dayjs";
 import { api } from "~/utils/api";
-import { CustomChart } from "./custom-chart";
 
 const dataFormatter: ValueFormatter = (number: number) => {
   return Math.round(number).toString() + " W";
 };
 
-export default function ForecastChart() {
-  const { data, isLoading } = api.forecast.nextForecast.useQuery();
+export default function BatteryLastDay() {
+  const { data, isLoading } = api.battery.todayHistory.useQuery();
 
   if (isLoading || !data) {
     return <>Loading...</>;
@@ -22,21 +15,21 @@ export default function ForecastChart() {
 
   return (
     <Card>
-      <Title>Vorhersage Morgen</Title>
+      <Title>Batteriestand Letzte 24h</Title>
       <LineChart
         connectNulls={true}
         data={
           data.map((entry) => {
             return {
               timestamp: dayjs(entry.timestamp).format("HH:mm"),
-              Vorhersage: entry.watts,
+              Batteriestand: entry.batteryCharge,
             };
           }) ?? [{ timestamp: dayjs().format("HH:mm") }]
         }
         className="mt-6"
         index={"timestamp"}
-        colors={["neutral"]}
-        categories={["Vorhersage"]}
+        colors={["blue"]}
+        categories={["Batteriestand"]}
         curveType="natural"
         valueFormatter={dataFormatter}
         showLegend={false}

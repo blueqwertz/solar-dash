@@ -7,7 +7,7 @@ import {
 } from "@tremor/react";
 import dayjs, { Dayjs } from "dayjs";
 import { api } from "~/utils/api";
-import { Example } from "../test";
+import { CustomChart } from "./custom-chart";
 
 const dataFormatter: ValueFormatter = (number: number) => {
   return Math.round(number).toString() + " W";
@@ -73,7 +73,7 @@ export default function HistoryChart() {
   return (
     <Card>
       <Title>Tagesverlauf</Title>
-      <LineChart
+      {/* <LineChart
         connectNulls={true}
         data={[...entries]}
         index={"timestamp"}
@@ -92,7 +92,8 @@ export default function HistoryChart() {
         showXAxis={false}
         // showGridLines={false}
         showAnimation={false}
-      />
+      /> */}
+      <CustomChart />
     </Card>
   );
 }
