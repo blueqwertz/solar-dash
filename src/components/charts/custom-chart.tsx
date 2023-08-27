@@ -17,22 +17,26 @@ import {
 const CustomTooltip = ({
   active,
   payload,
-  label,
 }: TooltipProps<ValueType, NameType>) => {
-  if (!payload || !payload[0]) {
-    return null;
-  }
+  if (!payload) return null;
+  if (!payload[0]) return null;
 
   if (active) {
     return (
       <div className="h-full rounded-lg border bg-white text-sm">
         <p className="border-b px-4 py-2 font-medium">
-          {payload[0].payload.timestamp}
+          {
+            // eslint-disable-next-line
+            payload[0].payload.timestamp
+          }
         </p>
         <div className="px-4 py-2">
-          {payload?.map((entry) => {
+          {payload?.map((entry, i) => {
             return (
-              <div className="flex w-48 items-center justify-between gap-2">
+              <div
+                key={`tooltip-${i}`}
+                className="flex w-48 items-center justify-between gap-2"
+              >
                 <div className="flex items-center gap-2">
                   <div className="flex h-3 w-3 items-center justify-center rounded-full shadow">
                     <div
