@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { api } from "~/utils/api";
 
 const dataFormatter: ValueFormatter = (number: number) => {
-  return Math.round(number).toString() + " W";
+  return Math.round(number).toString() + " %";
 };
 
 export default function BatteryLastDay() {
