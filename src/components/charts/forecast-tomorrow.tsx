@@ -7,7 +7,7 @@ import {
 } from "@tremor/react";
 import dayjs, { Dayjs } from "dayjs";
 import { api } from "~/utils/api";
-import { CustomChart } from "./custom-chart";
+import { DailyChart } from "./daily-chart";
 
 const dataFormatter: ValueFormatter = (number: number) => {
   return Math.round(number).toString() + " W";
